@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+{% block content %}
+  <!-- Sport Tabs -->
+  <div class="sport-tabs">
+    {% for key, sport in sports.items() %}
+      <a href="/?sport={{ key }}&market={{ current_market }}" class="tab {% if current_sport == key %}active{% endif %}">
+        {{ sport.name }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- Market Switcher -->
+  <div class="market-switcher">
+    <span class="market-label">Market:</span>
+    {% for key, market in markets.items() %}
+      <a href="/?sport={{ current_sport }}&market={{ key }}" class="market-tab {% if current_market == key %}active{% endif %}" title="{{ market.description }}">
+        {{ market.name }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <h2>💰 Arbitrage Opportunities</h2>
+  {% if opportunities %}
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Market</th>
+            <th>Profit</th>
+            <th>Arb %</th>
+            <th>Stakes (per selection)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in opportunities %}
+            <tr class="arb">
+              <td><strong>{{ o.event }}</strong></td>
+              <td><span class="market-badge">{{ o.market }}</span></td>
+              <td><span class="profit">${{ o.profit }}</span></td>
+              <td><span class="arb-percent">{{ o.arbitrage_percent }}%</span></td>
+              <td>
+                <ul>
+                  {% for s in o.stakes %}
+                    <li><strong>{{ s.selection }}</strong> ({{ s.bookmaker }}): ${{ s.stake }} @ {{ s.odds }}</li>
+                  {% endfor %}
+                </ul>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="card">
+      <p class="no-data">No arbitrage opportunities found right now. Check back later!</p>
+    </div>
+  {% endif %}
+
+  <h2>📊 All Events & Best Odds</h2>
+  {% for ev in events %}
+    <div class="card">
+      <div class="event-header">
+        <h3>{{ ev.name }}</h3>
+      </div>
+      
+      {% for mk, mv in ev.markets.items() %}
+        <h4><span class="market-badge">{{ mk }}</span></h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Selection</th>
+              <th>Best Odds</th>
+              <th>Bookmaker</th>
+              <th>All Offers</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sname, sdata in mv.selections.items() %}
+              <tr class="{{ 'best' if loop.first else '' }}">
+                <td><strong>{{ sname }}</strong></td>
+                <td><strong>{{ sdata.best.odds }}</strong></td>
+                <td>{{ sdata.best.bookmaker }}</td>
+                <td>
+                  <ul class="offer-list">
+                    {% for offer in sdata.offers %}
+                      <li>{{ offer.bookmaker }}: <strong>{{ offer.odds }}</strong></li>
+                    {% endfor %}
+                  </ul>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endfor %}
+    </div>
+  {% endfor %}
+  
+  {% if not events %}
+    <div class="card">
+      <p class="no-data">No events loaded. Check your API configuration.</p>
+    </div>
+  {% endif %}
+{% endblock %}

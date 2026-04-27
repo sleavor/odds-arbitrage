@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sports Betting Odds</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { 
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        margin: 0; padding: 0;
+        background: #f5f7fa;
+        color: #333;
+        line-height: 1.6;
+      }
+      .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+      header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 30px 0;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+      header h1 { margin: 0; font-size: 2.2em; }
+      header p { margin: 5px 0 0; opacity: 0.9; }
+      
+      h2 { 
+        color: #1e3c72; 
+        border-bottom: 2px solid #2a5298;
+        padding-bottom: 10px;
+        margin-top: 40px;
+      }
+      h3 { color: #444; margin-bottom: 15px; }
+      h4 { color: #666; margin: 20px 0 10px; }
+      
+      .card {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      
+      table { 
+        border-collapse: collapse; 
+        width: 100%; 
+        margin-bottom: 20px;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      th, td { 
+        padding: 12px 15px; 
+        text-align: left; 
+        border-bottom: 1px solid #eee;
+      }
+      th { 
+        background: #1e3c72; 
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85em;
+        letter-spacing: 0.5px;
+      }
+      tr:hover { background: #f8f9fa; }
+      tr:last-child td { border-bottom: none; }
+      
+      .best { background: #e8f5e9 !important; }
+      .best td:first-child::before {
+        content: "★ ";
+        color: #4caf50;
+        font-weight: bold;
+      }
+      
+      .arb {
+        background: #fff3e0 !important;
+        border-left: 4px solid #ff9800;
+      }
+      
+      .profit { 
+        color: #4caf50; 
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+      
+      .arb-percent {
+        background: #ff9800;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+      
+      ul { margin: 0; padding-left: 20px; }
+      li { margin: 4px 0; color: #555; }
+      
+      .no-data {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+        font-style: italic;
+      }
+      
+      .event-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      .event-header h3 { margin: 0; color: #1e3c72; }
+      
+      .market-badge {
+        display: inline-block;
+        background: #e3f2fd;
+        color: #1565c0;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 500;
+        margin-right: 8px;
+      }
+      
+      .offer-list {
+        font-size: 0.9em;
+        color: #666;
+      }
+      .offer-list li {
+        margin: 2px 0;
+      }
+      
+      /* Sport Tabs */
+      .sport-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+      .sport-tabs .tab {
+        display: inline-block;
+        padding: 12px 24px;
+        background: white;
+        color: #333;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      }
+      .sport-tabs .tab:hover {
+        background: #e3f2fd;
+        color: #1565c0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      }
+      .sport-tabs .tab.active {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
+      }
+      
+      /* Market Switcher */
+      .market-switcher {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 25px;
+        padding: 15px 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      .market-label {
+        font-weight: 600;
+        color: #666;
+        margin-right: 5px;
+      }
+      .market-switcher .market-tab {
+        display: inline-block;
+        padding: 8px 16px;
+        background: #f0f0f0;
+        color: #555;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 0.9em;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+      .market-switcher .market-tab:hover {
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+      .market-switcher .market-tab.active {
+        background: #2a5298;
+        color: white;
+      }
+      
+      footer {
+        text-align: center;
+        padding: 20px;
+        color: #999;
+        font-size: 0.9em;
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>🏆 Sports Betting Odds</h1>
+        <p>Compare odds across multiple bookmakers</p>
+      </div>
+    </header>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+    <footer>
+      <p>Data provided by the-odds-api.com • Only configured sportsbooks are queried</p>
+    </footer>
+  </body>
+</html>
